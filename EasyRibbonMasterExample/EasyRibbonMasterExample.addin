@@ -1,0 +1,15 @@
+﻿<RevitAddIns>
+    <AddIn Type="Application">
+        <Name>EasyRibbonMasterExample</Name>
+        <Assembly>EasyRibbonMasterExample\EasyRibbonMasterExample.dll</Assembly>
+        <AddInId>0EEFB98C-718F-40C6-8510-4CCEEE1E3482</AddInId>
+        <FullClassName>EasyRibbonMasterExample.Application</FullClassName>
+        <VendorId>Development</VendorId>
+        <VendorDescription></VendorDescription>
+        <VendorEmail></VendorEmail>
+    </AddIn>
+    <ManifestSettings>
+        <UseRevitContext>False</UseRevitContext>
+        <ContextName>EasyRibbonMasterExample</ContextName>
+    </ManifestSettings>
+</RevitAddIns>
