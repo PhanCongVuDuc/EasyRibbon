@@ -171,10 +171,6 @@ The module system allows you to organize multiple Revit add-ins into independent
 ✅ **Clean Code** - Clear structure and organization  
 ✅ **Error Isolation** - One module failure doesn't affect others
 
-#### Creating a Module
-
-See [HOW_TO_CREATE_NEW_MODULE.md](EasyRibbonExample/HOW_TO_CREATE_NEW_MODULE.md) for detailed instructions.
-
 #### Master Application (Load All Modules)
 
 ```csharp
