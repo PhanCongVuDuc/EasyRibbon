@@ -8,17 +8,13 @@ namespace EasyRibbonExample ;
 [UsedImplicitly]
 public class Application : ExternalApplication
 {
-  private readonly ExampleModule _module = new() ;
+    private readonly ExampleModule _module = new() ;
 
-  public override void OnStartup()
-  {
-    // Initialize module
-    _module.OnStartup( Application ) ;
-  }
-  
-  public override void OnShutdown()
-  {
-    // Shutdown module
-    _module.OnShutdown( Application ) ;
-  }
+    public override void OnStartup() =>
+        // Initialize module
+        _module.OnStartup(Application) ;
+
+    public override void OnShutdown() =>
+        // Shutdown module
+        _module.OnShutdown(Application) ;
 }

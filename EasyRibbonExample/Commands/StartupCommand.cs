@@ -8,11 +8,8 @@ namespace EasyRibbonExample.Commands ;
 ///     External command entry point
 /// </summary>
 [UsedImplicitly]
-[Transaction( TransactionMode.Manual )]
+[Transaction(TransactionMode.Manual)]
 public class StartupCommand : ExternalCommand
 {
-  public override void Execute()
-  {
-    MessageBox.Show("Hello Sonny");
-  }
+    public override void Execute() => MessageBox.Show("Hello Sonny") ;
 }

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial public release
 - Attribute-based ribbon UI definition system
 - Support for Button, Panel, Tab attributes
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation and README
 
 ### Features
+
 - 🎯 Attribute-based UI creation
 - 🧩 Modular architecture
 - 🔄 Multi-version Revit support
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-11-08
 
 ### Added
+
 - First stable release
 - Core EasyRibbon library
 - Example projects demonstrating usage
@@ -49,5 +52,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Security** - Security fixes
 
 [Unreleased]: https://github.com/PhanCongVuDuc/EasyRibbon/compare/v1.0.0...HEAD
+
 [1.0.0]: https://github.com/PhanCongVuDuc/EasyRibbon/releases/tag/v1.0.0
 

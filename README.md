@@ -1,8 +1,11 @@
 # EasyRibbon
 
-A powerful and elegant attribute-based framework for creating Revit Ribbon UI with minimal code. Build beautiful Revit add-in interfaces using simple C# attributes instead of verbose Revit API calls.
+A powerful and elegant attribute-based framework for creating Revit Ribbon UI with minimal code. Build beautiful Revit
+add-in interfaces using simple C# attributes instead of verbose Revit API calls.
 
-This project was inspired by the concept/idea from my company where I work. However, all the code in this repository is written entirely by me from scratch, with my own implementation, improvements, and new features to create this open-source framework.
+This project was inspired by the concept/idea from my company where I work. However, all the code in this repository is
+written entirely by me from scratch, with my own implementation, improvements, and new features to create this
+open-source framework.
 
 ![EasyRibbon Demo](Assets/ribbon-demo.png)
 
@@ -27,6 +30,7 @@ Example AlphaBIM Tool
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/PhanCongVuDuc/EasyRibbon.git
 ```
@@ -73,12 +77,12 @@ using Autodesk.Revit.UI;
 public class MyModule : IApplicationModule
 {
     public string ModuleName => "My Custom Module";
-    
+
     public void OnStartup(UIControlledApplication application)
     {
         CreateUIApp.CreateUI<MyToolsTab>(application);
     }
-    
+
     public void OnShutdown(UIControlledApplication application)
     {
         // Cleanup if needed
@@ -94,12 +98,12 @@ using Nice3point.Revit.Toolkit.External;
 public class Application : ExternalApplication
 {
     private readonly MyModule _module = new MyModule();
-    
+
     public override void OnStartup()
     {
         _module.OnStartup(Application);
     }
-    
+
     public override void OnShutdown()
     {
         _module.OnShutdown(Application);
@@ -114,18 +118,21 @@ That's it! 🎉 No more verbose Revit API calls for creating ribbon UI.
 ### Supported Attributes
 
 #### Tab Attribute
+
 ```csharp
 [Tab("Tab Name")]
 public class MyTab { }
 ```
 
 #### Panel Attribute
+
 ```csharp
 [Panel("Panel Name")]
 public class MyPanel { }
 ```
 
 #### Button Attribute
+
 ```csharp
 [Button("Button Text",
     typeof(CommandClass),
@@ -149,16 +156,17 @@ public class MyLocalizedButton;
 ```
 
 #### Stacked Button Attribute
+
 ```csharp
 [StackedButton("Stacked Button Name")]
 public class MyStackedButtons
 {
     [Button("Button 1", typeof(Command1), ...)]
     public class Button1;
-    
+
     [Button("Button 2", typeof(Command2), ...)]
     public class Button2;
-    
+
     [Button("Button 3", typeof(Command3), ...)]
     public class Button3;
 }
@@ -169,16 +177,16 @@ public class MyMixedStackedButtons
 {
     [Button("Button 1", typeof(Command1), ...)]
     public class Button1;
-    
+
     [Button("Button 2", typeof(Command2), ...)]
     public class Button2;
-    
+
     [PulldownButtonData("Pulldown Name", ...)]
     public class MyPulldown
     {
         [Button("Option 1", typeof(Command3), ...)]
         public class Option1;
-        
+
         [Button("Option 2", typeof(Command4), ...)]
         public class Option2;
     }
@@ -186,6 +194,7 @@ public class MyMixedStackedButtons
 ```
 
 #### Pulldown Button Attribute
+
 ```csharp
 [PulldownButtonData("Pulldown Name",
     Image = "path/to/16x16.png",
@@ -194,7 +203,7 @@ public class MyPulldown
 {
     [Button("Option 1", typeof(Command1), ...)]
     public class Option1;
-    
+
     [Button("Option 2", typeof(Command2), ...)]
     public class Option2;
 }
@@ -216,6 +225,7 @@ public class MyLocalizedPulldown
 ### Resource-Based Localization
 
 EasyRibbon supports localized strings through WPF ResourceDictionary. This allows you to:
+
 - Centralize all UI strings in XAML resource files
 - Support multiple languages easily
 - Provide fallback values when resources are not found
@@ -228,16 +238,16 @@ EasyRibbon supports localized strings through WPF ResourceDictionary. This allow
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    
+
     <!-- Tab Names -->
     <system:String x:Key="Tab.MyTab">My Tab</system:String>
-    
+
     <!-- Panel Names -->
     <system:String x:Key="Panel.MyPanel">My Panel</system:String>
-    
+
     <!-- Button Names -->
     <system:String x:Key="Button.MyButton">My Button</system:String>
-    
+
     <!-- ToolTips -->
     <system:String x:Key="ToolTip.MyButton">This is my button</system:String>
 </ResourceDictionary>
@@ -250,7 +260,7 @@ public void OnStartup(UIControlledApplication application)
 {
     // Load ResourceDictionary for resource-based names
     LoadResourceDictionary();
-    
+
     // Create ribbon UI
     CreateUIApp.CreateUI<MyToolsTab>(application);
 }
@@ -298,20 +308,22 @@ public class MyTab
 ```
 
 **How it works:**
+
 - If `NameKey` exists in ResourceDictionary → uses the resource value
 - If `NameKey` not found → falls back to `Name` parameter
 - Same logic applies to `ToolTipKey` → `ToolTipDefault` → `ToolTip`
 
 ### Module System
 
-The module system allows you to organize multiple Revit add-ins into independent modules that can be loaded together or separately.
+The module system allows you to organize multiple Revit add-ins into independent modules that can be loaded together or
+separately.
 
 #### Benefits
 
-✅ **Separation of Concerns** - Each module is independent  
-✅ **Easy Testing** - Debug individual modules separately  
-✅ **Flexible Deployment** - Load all modules or specific ones  
-✅ **Clean Code** - Clear structure and organization  
+✅ **Separation of Concerns** - Each module is independent
+✅ **Easy Testing** - Debug individual modules separately
+✅ **Flexible Deployment** - Load all modules or specific ones
+✅ **Clean Code** - Clear structure and organization
 ✅ **Error Isolation** - One module failure doesn't affect others
 
 #### Master Application (Load All Modules)
@@ -320,18 +332,18 @@ The module system allows you to organize multiple Revit add-ins into independent
 public class MasterApplication : ExternalApplication
 {
     private readonly ModuleRegistry _moduleRegistry = new ModuleRegistry();
-    
+
     public override void OnStartup()
     {
         // Register modules
         _moduleRegistry.RegisterModule<Module1>();
         _moduleRegistry.RegisterModule<Module2>();
         _moduleRegistry.RegisterModule<Module3>();
-        
+
         // Initialize all
         _moduleRegistry.InitializeAll(Application);
     }
-    
+
     public override void OnShutdown()
     {
         _moduleRegistry.ShutdownAll(Application);
@@ -372,11 +384,11 @@ EasyRibbon/
 Check out the included example projects:
 
 1. **EasyRibbonExample** - Single module with multiple tabs and panels
-   - `SonnyTab1.cs` - Basic buttons and stacked buttons
-   - `SonnyTab2.cs` - More stacked button examples
-   - `SonnyTab3.cs` - Pulldown button examples
-   - `SonnyTab4.cs` - **Stacked buttons with pulldown button and resource-based localization**
-   - `Resources/Strings.xaml` - ResourceDictionary example for localization
+    - `SonnyTab1.cs` - Basic buttons and stacked buttons
+    - `SonnyTab2.cs` - More stacked button examples
+    - `SonnyTab3.cs` - Pulldown button examples
+    - `SonnyTab4.cs` - **Stacked buttons with pulldown button and resource-based localization**
+    - `Resources/Strings.xaml` - ResourceDictionary example for localization
 2. **EasyRibbonMasterExample** - Master application loading multiple modules
 
 Run the examples to see the framework in action!

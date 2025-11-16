@@ -2,8 +2,5 @@
 
 public static class StringExtension
 {
-  public static string RemoveWhitespace( this string str )
-  {
-    return string.Concat( str.Where( c => ! char.IsWhiteSpace( c ) ) ) ;
-  }
+    public static string RemoveWhitespace(this string str) => string.Concat(str.Where(c => ! char.IsWhiteSpace(c))) ;
 }

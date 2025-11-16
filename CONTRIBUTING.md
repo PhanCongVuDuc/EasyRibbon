@@ -7,6 +7,7 @@ Thank you for your interest in contributing to EasyRibbon! We welcome contributi
 ### Reporting Bugs
 
 If you find a bug, please create an issue on GitHub with:
+
 - Clear description of the problem
 - Steps to reproduce
 - Expected behavior vs actual behavior
@@ -16,6 +17,7 @@ If you find a bug, please create an issue on GitHub with:
 ### Suggesting Features
 
 We love new ideas! Please create an issue with:
+
 - Clear description of the feature
 - Use cases and examples
 - Why this would be useful
@@ -33,22 +35,22 @@ We love new ideas! Please create an issue with:
    ```
 
 3. **Make your changes**
-   - Write clean, readable code
-   - Follow the existing code style
-   - Add comments for complex logic
-   - Test your changes thoroughly
+    - Write clean, readable code
+    - Follow the existing code style
+    - Add comments for complex logic
+    - Test your changes thoroughly
 
 4. **Commit your changes**
    ```bash
    git commit -m "Add: brief description of your changes"
    ```
-   
+
    Use clear commit messages:
-   - `Add:` for new features
-   - `Fix:` for bug fixes
-   - `Update:` for updates to existing features
-   - `Refactor:` for code refactoring
-   - `Docs:` for documentation changes
+    - `Add:` for new features
+    - `Fix:` for bug fixes
+    - `Update:` for updates to existing features
+    - `Refactor:` for code refactoring
+    - `Docs:` for documentation changes
 
 5. **Push to your fork**
    ```bash
@@ -56,9 +58,9 @@ We love new ideas! Please create an issue with:
    ```
 
 6. **Create a Pull Request**
-   - Describe what your PR does
-   - Reference any related issues
-   - Include screenshots if UI changes
+    - Describe what your PR does
+    - Reference any related issues
+    - Include screenshots if UI changes
 
 ## Code Style Guidelines
 
@@ -66,9 +68,9 @@ We love new ideas! Please create an issue with:
 
 - Use meaningful variable and method names
 - Follow C# naming conventions:
-  - PascalCase for classes, methods, properties
-  - camelCase for local variables
-  - _camelCase for private fields
+    - PascalCase for classes, methods, properties
+    - camelCase for local variables
+    - _camelCase for private fields
 - Add XML documentation comments for public APIs
 - Keep methods focused and small
 
@@ -107,6 +109,7 @@ public static void CreateUI<T>(UIControlledApplication application)
 ## Questions?
 
 If you have questions, feel free to:
+
 - Open an issue for discussion
 - Ask in your Pull Request
 
