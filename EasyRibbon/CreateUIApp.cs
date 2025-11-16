@@ -16,18 +16,18 @@ public class CreateUIApp
     /// <param name="application">UIControlledApplication instance</param>
     public static void CreateUI<T>(UIControlledApplication application) where T : class
     {
-        TabAttribute? tabAttribute = typeof( T ).GetCustomAttributes<TabAttribute>(false)
+        var tabAttribute = typeof( T ).GetCustomAttributes<TabAttribute>(false)
             .FirstOrDefault() ;
         if (tabAttribute == null)
         {
             return ;
         }
 
-        string tabName = tabAttribute.ResolveName() ;
+        var tabName = tabAttribute.ResolveName() ;
         application.GetOrCreateRibbonTab(tabName) ;
 
-        List<Type> panelTypes = typeof( T ).GetClassTypes() ;
-        foreach (Type? panelType in panelTypes)
+        var panelTypes = typeof( T ).GetClassTypes() ;
+        foreach (var panelType in panelTypes)
         {
             ProcessPanel(application,
                 panelType,
@@ -39,7 +39,7 @@ public class CreateUIApp
         Type panelType,
         string tabName)
     {
-        PanelAttribute? panelAttribute = panelType.GetCustomAttributes<PanelAttribute>(false)
+        var panelAttribute = panelType.GetCustomAttributes<PanelAttribute>(false)
             .FirstOrDefault() ;
         if (panelAttribute == null)
         {
@@ -47,14 +47,14 @@ public class CreateUIApp
         }
 
         panelAttribute.SetData(tabName) ;
-        RibbonPanel? ribbonPanel = panelAttribute.CreateRibbonPanel(application) ;
+        var ribbonPanel = panelAttribute.CreateRibbonPanel(application) ;
         if (ribbonPanel == null)
         {
             return ;
         }
 
-        List<Type> itemTypes = panelType.GetClassTypes() ;
-        foreach (Type? itemType in itemTypes)
+        var itemTypes = panelType.GetClassTypes() ;
+        foreach (var itemType in itemTypes)
         {
             ProcessRibbonItem(ribbonPanel,
                 itemType) ;
@@ -64,7 +64,7 @@ public class CreateUIApp
     private static void ProcessRibbonItem(RibbonPanel ribbonPanel,
         Type itemType)
     {
-        object? attribute = itemType.GetCustomAttributes(false)
+        var attribute = itemType.GetCustomAttributes(false)
             .FirstOrDefault() ;
 
         switch (attribute)
@@ -88,11 +88,10 @@ public class CreateUIApp
     private static void ProcessStackedButtons(RibbonPanel ribbonPanel,
         Type stackedButtonType)
     {
-        List<Type> buttonTypes = stackedButtonType.GetClassTypes() ;
-        (List<object> stackedItems, List<(PulldownButtonData data, List<PushButtonData> buttons)> pulldownConfigs) =
-            CollectStackedItems(buttonTypes) ;
+        var buttonTypes = stackedButtonType.GetClassTypes() ;
+        var (stackedItems, pulldownConfigs) = CollectStackedItems(buttonTypes) ;
 
-        IList<RibbonItem>? stackedRibbonItems = ribbonPanel.AddStackedItemsMixed(stackedItems) ;
+        var stackedRibbonItems = ribbonPanel.AddStackedItemsMixed(stackedItems) ;
         if (stackedRibbonItems == null)
         {
             return ;
@@ -108,7 +107,7 @@ public class CreateUIApp
         List<object> stackedItems = new() ;
         List<(PulldownButtonData data, List<PushButtonData> buttons)> pulldownConfigs = new() ;
 
-        foreach (Type? buttonType in buttonTypes)
+        foreach (var buttonType in buttonTypes)
         {
             if (buttonType.GetCustomAttributes<ButtonAttribute>(false)
                     .FirstOrDefault() is { } buttonAttribute)
@@ -123,11 +122,11 @@ public class CreateUIApp
                 continue ;
             }
 
-            PulldownButtonData pulldownButtonData = pulldownAttribute.CreatePulldownButtonData() ;
+            var pulldownButtonData = pulldownAttribute.CreatePulldownButtonData() ;
             stackedItems.Add(pulldownButtonData) ;
 
-            List<Type> nestedButtonTypes = buttonType.GetClassTypes() ;
-            List<PushButtonData> nestedButtons = CollectNestedButtons(nestedButtonTypes) ;
+            var nestedButtonTypes = buttonType.GetClassTypes() ;
+            var nestedButtons = CollectNestedButtons(nestedButtonTypes) ;
             pulldownConfigs.Add((pulldownButtonData, nestedButtons)) ;
         }
 
@@ -137,9 +136,9 @@ public class CreateUIApp
     private static List<PushButtonData> CollectNestedButtons(List<Type> buttonTypes)
     {
         List<PushButtonData> buttons = new() ;
-        foreach (Type? buttonType in buttonTypes)
+        foreach (var buttonType in buttonTypes)
         {
-            ButtonAttribute? buttonAttribute = buttonType.GetCustomAttributes<ButtonAttribute>(false)
+            var buttonAttribute = buttonType.GetCustomAttributes<ButtonAttribute>(false)
                 .FirstOrDefault() ;
             if (buttonAttribute == null)
             {
@@ -155,16 +154,16 @@ public class CreateUIApp
     private static void AddButtonsToPulldowns(IList<RibbonItem> stackedRibbonItems,
         List<(PulldownButtonData data, List<PushButtonData> buttons)> pulldownConfigs)
     {
-        foreach ((PulldownButtonData data, List<PushButtonData> buttons) in pulldownConfigs)
+        foreach (var (data, buttons) in pulldownConfigs)
         {
-            PulldownButton? pulldownButton = stackedRibbonItems.OfType<PulldownButton>()
+            var pulldownButton = stackedRibbonItems.OfType<PulldownButton>()
                 .FirstOrDefault(pb => pb.Name == data.Name) ;
             if (pulldownButton == null)
             {
                 continue ;
             }
 
-            foreach (PushButtonData? buttonData in buttons)
+            foreach (var buttonData in buttons)
             {
                 pulldownButton.AddPushButton(buttonData) ;
             }
@@ -175,12 +174,12 @@ public class CreateUIApp
         Type pulldownType,
         PulldownButtonDataAttribute pulldownAttribute)
     {
-        PulldownButtonData pulldownButtonData = pulldownAttribute.CreatePulldownButtonData() ;
-        PulldownButton? pulldownButton = (PulldownButton)ribbonPanel.AddItem(pulldownButtonData) ;
+        var pulldownButtonData = pulldownAttribute.CreatePulldownButtonData() ;
+        var pulldownButton = (PulldownButton)ribbonPanel.AddItem(pulldownButtonData) ;
 
-        List<Type> nestedButtonTypes = pulldownType.GetClassTypes() ;
-        List<PushButtonData> nestedButtons = CollectNestedButtons(nestedButtonTypes) ;
-        foreach (PushButtonData? buttonData in nestedButtons)
+        var nestedButtonTypes = pulldownType.GetClassTypes() ;
+        var nestedButtons = CollectNestedButtons(nestedButtonTypes) ;
+        foreach (var buttonData in nestedButtons)
         {
             pulldownButton.AddPushButton(buttonData) ;
         }
@@ -189,7 +188,7 @@ public class CreateUIApp
     private static void ProcessButton(RibbonPanel ribbonPanel,
         ButtonAttribute buttonAttribute)
     {
-        PushButtonData pushButtonData = buttonAttribute.CreatePushButtonData() ;
+        var pushButtonData = buttonAttribute.CreatePushButtonData() ;
         ribbonPanel.AddItem(pushButtonData) ;
     }
 }

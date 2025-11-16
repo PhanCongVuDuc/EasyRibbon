@@ -25,7 +25,7 @@ public static class ResourceExtension
         {
             if (Application.Current != null)
             {
-                object? resource = Application.Current.TryFindResource(key) ;
+                var resource = Application.Current.TryFindResource(key) ;
                 if (resource is string str
                     && ! string.IsNullOrEmpty(str))
                 {

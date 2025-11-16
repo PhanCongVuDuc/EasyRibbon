@@ -1,5 +1,4 @@
-﻿using System.Windows.Media.Imaging ;
-using Autodesk.Revit.UI ;
+﻿using Autodesk.Revit.UI ;
 using EasyRibbon.Extensions ;
 using EasyRibbon.UIAttributeBase.Base ;
 
@@ -24,27 +23,27 @@ public class PulldownButtonDataAttribute(string name) : Base.UIAttributeBase(nam
 
     public PulldownButtonData CreatePulldownButtonData()
     {
-        string displayName = ResolveName() ;
+        var displayName = ResolveName() ;
 
         PulldownButtonData pulldownButtonData = new(Unique,
             displayName) ;
 
         // Set Image (16x16)
-        BitmapImage? image = ImageExtension.TryCreateBitmapImage(Image) ;
+        var image = ImageExtension.TryCreateBitmapImage(Image) ;
         if (image != null)
         {
             pulldownButtonData.Image = image ;
         }
 
         // Set LargeImage (32x32)
-        BitmapImage? largeImage = ImageExtension.TryCreateBitmapImage(LargeImage) ;
+        var largeImage = ImageExtension.TryCreateBitmapImage(LargeImage) ;
         if (largeImage != null)
         {
             pulldownButtonData.LargeImage = largeImage ;
         }
 
         // Set ToolTipImage
-        BitmapImage? toolTipImage = ImageExtension.TryCreateBitmapImage(ToolTipImage) ;
+        var toolTipImage = ImageExtension.TryCreateBitmapImage(ToolTipImage) ;
         if (toolTipImage != null)
         {
             pulldownButtonData.ToolTipImage = toolTipImage ;
@@ -56,7 +55,7 @@ public class PulldownButtonDataAttribute(string name) : Base.UIAttributeBase(nam
         }
 
         // Resolve ToolTip from ToolTipKey or use ToolTipDefault
-        string? tooltip = GetResourceStringOrDefault(ToolTipKey,
+        var tooltip = GetResourceStringOrDefault(ToolTipKey,
             ToolTipDefault) ;
         if (! string.IsNullOrEmpty(tooltip))
         {

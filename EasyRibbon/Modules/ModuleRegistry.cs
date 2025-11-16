@@ -32,7 +32,7 @@ public class ModuleRegistry
     /// <param name="application">The UIControlledApplication instance</param>
     public void InitializeAll(UIControlledApplication application)
     {
-        foreach (IApplicationModule? module in _modules)
+        foreach (var module in _modules)
         {
             try
             {
@@ -52,7 +52,7 @@ public class ModuleRegistry
     /// <param name="application">The UIControlledApplication instance</param>
     public void ShutdownAll(UIControlledApplication application)
     {
-        foreach (IApplicationModule? module in _modules)
+        foreach (var module in _modules)
         {
             try
             {

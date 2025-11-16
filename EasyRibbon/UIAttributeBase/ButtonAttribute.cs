@@ -1,5 +1,4 @@
-﻿using System.Windows.Media.Imaging ;
-using Autodesk.Revit.UI ;
+﻿using Autodesk.Revit.UI ;
 using EasyRibbon.Extensions ;
 using EasyRibbon.UIAttributeBase.Base ;
 
@@ -28,7 +27,7 @@ public class ButtonAttribute(string name, Type commandType) : Base.UIAttributeBa
 
     public PushButtonData CreatePushButtonData()
     {
-        string displayName = ResolveName() ;
+        var displayName = ResolveName() ;
 
         PushButtonData buttonData = new(Unique,
             displayName,
@@ -36,21 +35,21 @@ public class ButtonAttribute(string name, Type commandType) : Base.UIAttributeBa
             ClassName) ;
 
         // Set Image (16x16)
-        BitmapImage? image = ImageExtension.TryCreateBitmapImage(Image) ;
+        var image = ImageExtension.TryCreateBitmapImage(Image) ;
         if (image != null)
         {
             buttonData.Image = image ;
         }
 
         // Set LargeImage (32x32)
-        BitmapImage? largeImage = ImageExtension.TryCreateBitmapImage(LargeImage) ;
+        var largeImage = ImageExtension.TryCreateBitmapImage(LargeImage) ;
         if (largeImage != null)
         {
             buttonData.LargeImage = largeImage ;
         }
 
         // Set ToolTipImage
-        BitmapImage? toolTipImage = ImageExtension.TryCreateBitmapImage(ToolTipImage) ;
+        var toolTipImage = ImageExtension.TryCreateBitmapImage(ToolTipImage) ;
         if (toolTipImage != null)
         {
             buttonData.ToolTipImage = toolTipImage ;
@@ -62,7 +61,7 @@ public class ButtonAttribute(string name, Type commandType) : Base.UIAttributeBa
         }
 
         // Resolve ToolTip from ToolTipKey or use ToolTipDefault
-        string? tooltip = GetResourceStringOrDefault(ToolTipKey,
+        var tooltip = GetResourceStringOrDefault(ToolTipKey,
             ToolTipDefault) ;
         if (! string.IsNullOrEmpty(tooltip))
         {

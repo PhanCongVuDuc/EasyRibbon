@@ -17,7 +17,7 @@ public class UIAttributeBase(string name) : Attribute
     /// </summary>
     public string ResolveName()
     {
-        string? resourceStringOrDefault = GetResourceStringOrDefault(NameKey,
+        var resourceStringOrDefault = GetResourceStringOrDefault(NameKey,
             Name) ;
         return resourceStringOrDefault ?? Name ;
     }
@@ -25,7 +25,7 @@ public class UIAttributeBase(string name) : Attribute
     protected string? GetResourceStringOrDefault(string? resourceKey,
         string? defaultString)
     {
-        string? resourceStringOrDefault = ResourceExtension.ResolveString(resourceKey) ;
+        var resourceStringOrDefault = ResourceExtension.ResolveString(resourceKey) ;
         return resourceStringOrDefault ?? defaultString ;
     }
 }

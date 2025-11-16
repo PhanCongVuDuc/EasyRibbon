@@ -9,7 +9,7 @@ public class UriExtension
         if (linkImage.StartsWith("/"))
         {
             // Pack URI format - need full pack URI scheme
-            string packUriString = "pack://application:,,," + linkImage ;
+            var packUriString = "pack://application:,,," + linkImage ;
             uri = new Uri(packUriString,
                 UriKind.RelativeOrAbsolute) ;
         }

@@ -16,9 +16,9 @@ public static class RibbonPanelExtension
         }
 
         // Convert to appropriate types
-        object? item0 = items[0] ;
-        object? item1 = items[1] ;
-        object? item2 = items.Count > 2 ? items[2] : null ;
+        var item0 = items[0] ;
+        var item1 = items[1] ;
+        var item2 = items.Count > 2 ? items[2] : null ;
 
         // Handle 2 items
         if (items.Count == 2)
