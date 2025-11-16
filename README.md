@@ -2,6 +2,8 @@
 
 A powerful and elegant attribute-based framework for creating Revit Ribbon UI with minimal code. Build beautiful Revit add-in interfaces using simple C# attributes instead of verbose Revit API calls.
 
+This project was inspired by the concept/idea from my company where I work. However, all the code in this repository is written entirely by me from scratch, with my own implementation, improvements, and new features to create this open-source framework.
+
 ![EasyRibbon Demo](Assets/ribbon-demo.png)
 
 Example AlphaBIM Tool
@@ -395,6 +397,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
+- My company - For the original concept/idea that inspired this framework (all code written by me)
 - [Nice3point](https://github.com/Nice3point) for the excellent Revit Toolkit
 - The Revit API community for inspiration and support
 
