@@ -4,73 +4,168 @@ using EasyRibbon.UIAttributeBase ;
 
 namespace EasyRibbon ;
 
+/// <summary>
+/// Factory class for creating Revit ribbon UI from attribute-based configuration
+/// </summary>
 public class CreateUIApp
 {
+  /// <summary>
+  /// Creates ribbon UI from type T that contains TabAttribute and nested panel/button classes
+  /// </summary>
+  /// <typeparam name="T">Type containing ribbon tab configuration</typeparam>
+  /// <param name="application">UIControlledApplication instance</param>
   public static void CreateUI<T>( UIControlledApplication application ) where T : class
   {
-    var tab = typeof( T ).GetCustomAttributes<TabAttribute>( false )
+    var tabAttribute = typeof( T ).GetCustomAttributes<TabAttribute>( false )
       .FirstOrDefault() ;
-    if ( tab == null )
+    if ( tabAttribute == null )
       return ;
 
-    // Get or create ribbon tab (won't throw exception if tab already exists)
-    application.GetOrCreateRibbonTab( tab.Name ) ;
+    application.GetOrCreateRibbonTab( tabAttribute.Name ) ;
 
-    var panels = typeof( T ).GetClassTypes() ;
+    var panelTypes = typeof( T ).GetClassTypes() ;
+    foreach ( var panelType in panelTypes ) {
+      ProcessPanel( application,
+        panelType,
+        tabAttribute.Name ) ;
+    }
+  }
 
-    foreach ( var panel in panels ) {
-      if ( panel.GetCustomAttributes<PanelAttribute>( false )
-            .FirstOrDefault() is not { } panelAttribute ) {
+  private static void ProcessPanel( UIControlledApplication application,
+    Type panelType,
+    string tabName )
+  {
+    var panelAttribute = panelType.GetCustomAttributes<PanelAttribute>( false )
+      .FirstOrDefault() ;
+    if ( panelAttribute == null )
+      return ;
+
+    panelAttribute.SetData( tabName ) ;
+    var ribbonPanel = panelAttribute.CreateRibbonPanel( application ) ;
+    if ( ribbonPanel == null )
+      return ;
+
+    var itemTypes = panelType.GetClassTypes() ;
+    foreach ( var itemType in itemTypes ) {
+      ProcessRibbonItem( ribbonPanel,
+        itemType ) ;
+    }
+  }
+
+  private static void ProcessRibbonItem( RibbonPanel ribbonPanel,
+    Type itemType )
+  {
+    var attribute = itemType.GetCustomAttributes( false )
+      .FirstOrDefault() ;
+
+    switch ( attribute ) {
+      case StackedButtonAttribute :
+        ProcessStackedButtons( ribbonPanel,
+          itemType ) ;
+        break ;
+      case PulldownButtonDataAttribute pulldownAttribute :
+        ProcessPulldownButton( ribbonPanel,
+          itemType,
+          pulldownAttribute ) ;
+        break ;
+      case ButtonAttribute buttonAttribute :
+        ProcessButton( ribbonPanel,
+          buttonAttribute ) ;
+        break ;
+    }
+  }
+
+  private static void ProcessStackedButtons( RibbonPanel ribbonPanel,
+    Type stackedButtonType )
+  {
+    var buttonTypes = stackedButtonType.GetClassTypes() ;
+    var (stackedItems, pulldownConfigs) = CollectStackedItems( buttonTypes ) ;
+
+    var stackedRibbonItems = ribbonPanel.AddStackedItemsMixed( stackedItems ) ;
+    if ( stackedRibbonItems == null )
+      return ;
+
+    AddButtonsToPulldowns( stackedRibbonItems,
+      pulldownConfigs ) ;
+  }
+
+  private static (List<object> stackedItems, List<(PulldownButtonData data, List<PushButtonData> buttons)>
+    pulldownConfigs) CollectStackedItems( List<Type> buttonTypes )
+  {
+    var stackedItems = new List<object>() ;
+    var pulldownConfigs = new List<(PulldownButtonData data, List<PushButtonData> buttons)>() ;
+
+    foreach ( var buttonType in buttonTypes ) {
+      if ( buttonType.GetCustomAttributes<ButtonAttribute>( false )
+            .FirstOrDefault() is { } buttonAttribute ) {
+        stackedItems.Add( buttonAttribute.CreatePushButtonData() ) ;
         continue ;
       }
 
-      panelAttribute.SetData( tab.Name ) ;
-      if ( panelAttribute.CreateRibbonPanel( application ) is not { } ribbonPanel ) {
+      if ( buttonType.GetCustomAttributes<PulldownButtonDataAttribute>( false )
+            .FirstOrDefault() is not { } pulldownAttribute ) {
         continue ;
       }
 
-      var types = panel.GetClassTypes() ;
-      foreach ( var type in types ) {
-        var atrItem = type.GetCustomAttributes( false ).FirstOrDefault() ;
-        switch ( atrItem ) {
-          case StackedButtonAttribute :
-            var classButtonTypes = type.GetClassTypes() ;
-            var pushButtonDatas = new List<PushButtonData>() ;
-            foreach ( var classButtonType in classButtonTypes ) {
-              var buttonAttribute = classButtonType.GetCustomAttributes<ButtonAttribute>( false )
-                .FirstOrDefault() ;
-              if ( buttonAttribute == null ) {
-                continue ;
-              }
+      var pulldownButtonData = pulldownAttribute.CreatePulldownButtonData() ;
+      stackedItems.Add( pulldownButtonData ) ;
 
-              pushButtonDatas.Add( buttonAttribute.CreatePushButtonData() ) ;
-            }
+      var nestedButtonTypes = buttonType.GetClassTypes() ;
+      var nestedButtons = CollectNestedButtons( nestedButtonTypes ) ;
+      pulldownConfigs.Add( ( pulldownButtonData, nestedButtons ) ) ;
+    }
 
-            ribbonPanel.AddStackedItems( pushButtonDatas ) ;
-            break ;
-          case PulldownButtonDataAttribute pulldownButtonDataAttribute :
-            var classButtonTypes1 = type.GetClassTypes() ;
-            var pulldownButtonData = pulldownButtonDataAttribute.CreatePulldownButtonData() ;
-            var pulldownButton = (PulldownButton) ribbonPanel.AddItem( pulldownButtonData ) ;
-            foreach ( var classButtonType in classButtonTypes1 ) {
-              var buttonAttribute = classButtonType.GetCustomAttributes<ButtonAttribute>( false )
-                .FirstOrDefault() ;
+    return ( stackedItems, pulldownConfigs ) ;
+  }
 
-              if ( buttonAttribute == null ) {
-                continue ;
-              }
+  private static List<PushButtonData> CollectNestedButtons( List<Type> buttonTypes )
+  {
+    var buttons = new List<PushButtonData>() ;
+    foreach ( var buttonType in buttonTypes ) {
+      var buttonAttribute = buttonType.GetCustomAttributes<ButtonAttribute>( false )
+        .FirstOrDefault() ;
+      if ( buttonAttribute == null )
+        continue ;
 
-              pulldownButton.AddPushButton( buttonAttribute.CreatePushButtonData() ) ;
-            }
+      buttons.Add( buttonAttribute.CreatePushButtonData() ) ;
+    }
 
-            break ;
-          case ButtonAttribute buttonAttribute :
-            var pushButtonData = buttonAttribute.CreatePushButtonData() ;
-            ribbonPanel.AddItem( pushButtonData ) ;
+    return buttons ;
+  }
 
-            break ;
-        }
+  private static void AddButtonsToPulldowns( IList<RibbonItem> stackedRibbonItems,
+    List<(PulldownButtonData data, List<PushButtonData> buttons)> pulldownConfigs )
+  {
+    foreach ( var (data, buttons) in pulldownConfigs ) {
+      var pulldownButton = stackedRibbonItems.OfType<PulldownButton>()
+        .FirstOrDefault( pb => pb.Name == data.Name ) ;
+      if ( pulldownButton == null )
+        continue ;
+
+      foreach ( var buttonData in buttons ) {
+        pulldownButton.AddPushButton( buttonData ) ;
       }
     }
+  }
+
+  private static void ProcessPulldownButton( RibbonPanel ribbonPanel,
+    Type pulldownType,
+    PulldownButtonDataAttribute pulldownAttribute )
+  {
+    var pulldownButtonData = pulldownAttribute.CreatePulldownButtonData() ;
+    var pulldownButton = (PulldownButton) ribbonPanel.AddItem( pulldownButtonData ) ;
+
+    var nestedButtonTypes = pulldownType.GetClassTypes() ;
+    var nestedButtons = CollectNestedButtons( nestedButtonTypes ) ;
+    foreach ( var buttonData in nestedButtons ) {
+      pulldownButton.AddPushButton( buttonData ) ;
+    }
+  }
+
+  private static void ProcessButton( RibbonPanel ribbonPanel,
+    ButtonAttribute buttonAttribute )
+  {
+    var pushButtonData = buttonAttribute.CreatePushButtonData() ;
+    ribbonPanel.AddItem( pushButtonData ) ;
   }
 }

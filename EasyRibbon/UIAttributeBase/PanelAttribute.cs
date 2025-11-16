@@ -18,6 +18,6 @@ public class PanelAttribute( string name ) : Base.UIAttributeBase( name )
     return _tabName == null
       ? null
       : application.GetOrCreateRibbonPanel( _tabName,
-        Name ) ;
+        ResolveName() ) ;
   }
 }

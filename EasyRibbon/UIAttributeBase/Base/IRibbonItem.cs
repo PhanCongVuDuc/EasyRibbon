@@ -7,5 +7,5 @@ public interface IRibbonItem
   string? LargeImage { get ; set ; }
   string? ToolTipImage { get ; set ; }
   string? LongDescription { get ; set ; }
-  string? ToolTip { get ; set ; }
+  string? ToolTipDefault { get ; set ; }
 }

@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.UI ;
-using System.Windows.Media.Imaging ;
 using EasyRibbon.Extensions ;
 using EasyRibbon.UIAttributeBase.Base ;
 
@@ -7,12 +6,12 @@ namespace EasyRibbon.UIAttributeBase ;
 
 public class ButtonAttribute( string name, Type commandType ) : Base.UIAttributeBase( name ), IRibbonItem
 {
-  private Type CommandType { get ; } = commandType ?? throw new ArgumentNullException( nameof( commandType ) ) ;
-
+  private Type CommandType { get ; } = commandType ;
   private string ClassName => CommandType.FullName ?? throw new InvalidOperationException( "Command type must have a FullName" ) ;
-
   private string AssemblyPath => CommandType.Assembly.Location ;
-  public string Unique => Name.RemoveWhitespace() ;
+  public string Unique => ResolveName().RemoveWhitespace() ;
+  public string? ToolTipKey { get ; set ; }
+  public string? ToolTipDefault { get ; set ; }
   public string? Image { get ; set ; }
   public string? LargeImage { get ; set ; }
   public string? ToolTipImage { get ; set ; }
@@ -21,38 +20,40 @@ public class ButtonAttribute( string name, Type commandType ) : Base.UIAttribute
 
   public PushButtonData CreatePushButtonData()
   {
+    var displayName = ResolveName() ;
+
     var buttonData = new PushButtonData( Unique,
-      Name,
+      displayName,
       AssemblyPath,
       ClassName ) ;
 
     // Set Image (16x16)
-    if ( Image != null ) {
-      var uri = UriExtension.CreateUri( Image ) ;
-      var bitmapImage = new BitmapImage( uri ) ;
-      buttonData.Image = bitmapImage ;
+    var image = ImageExtension.TryCreateBitmapImage( Image ) ;
+    if ( image != null ) {
+      buttonData.Image = image ;
     }
 
     // Set LargeImage (32x32)
-    if ( LargeImage != null ) {
-      var uri = UriExtension.CreateUri( LargeImage ) ;
-      var bitmapImage = new BitmapImage( uri ) ;
-      buttonData.LargeImage = bitmapImage ;
+    var largeImage = ImageExtension.TryCreateBitmapImage( LargeImage ) ;
+    if ( largeImage != null ) {
+      buttonData.LargeImage = largeImage ;
     }
 
     // Set ToolTipImage
-    if ( ToolTipImage != null ) {
-      var uri = UriExtension.CreateUri( ToolTipImage ) ;
-      var bitmapImage = new BitmapImage( uri ) ;
-      buttonData.ToolTipImage = bitmapImage ;
+    var toolTipImage = ImageExtension.TryCreateBitmapImage( ToolTipImage ) ;
+    if ( toolTipImage != null ) {
+      buttonData.ToolTipImage = toolTipImage ;
     }
 
     if ( ! string.IsNullOrEmpty( LongDescription ) ) {
       buttonData.LongDescription = LongDescription ;
     }
 
-    if ( ! string.IsNullOrEmpty( ToolTip ) ) {
-      buttonData.ToolTip = ToolTip ;
+    // Resolve ToolTip from ToolTipKey or use ToolTipDefault
+    var tooltip = GetResourceStringOrDefault( ToolTipKey,
+      ToolTipDefault ) ;
+    if ( ! string.IsNullOrEmpty( tooltip ) ) {
+      buttonData.ToolTip = tooltip ;
     }
 
     return buttonData ;

@@ -45,8 +45,9 @@ public static class UIControlledApplicationExtension
     catch {
       // Panel already exists, find and return it
       return application.GetRibbonPanels( tabName )
-               .FirstOrDefault( p => p.Name == panelName ) ??
-             throw new InvalidOperationException( $"Failed to get or create panel '{panelName}' in tab '{tabName}'" ) ;
+               .FirstOrDefault( p => p.Name == panelName )
+             ?? throw new InvalidOperationException(
+               $"Failed to get or create panel '{panelName}' in tab '{tabName}'" ) ;
     }
   }
 }

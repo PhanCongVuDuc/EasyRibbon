@@ -8,21 +8,16 @@ public static class TypeExtension
     bool inherit )
   {
     return type.GetCustomAttributes( inherit )
-      .Cast<TTypeAtribute>()
+      .OfType<TTypeAtribute>()
       .ToList() ;
   }
 
   public static List<Type> GetClassTypes( this Type type )
   {
-    return type.GetNestedTypes( BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public |
-                                BindingFlags.NonPublic )
-      .ToList() ;
-  }
-
-  public static List<string> GetClassNames( this Type type )
-  {
-    return type.GetClassTypes()
-      .Select( x => x.FullName )
+    return type.GetNestedTypes( BindingFlags.Static
+                                | BindingFlags.Instance
+                                | BindingFlags.Public
+                                | BindingFlags.NonPublic )
       .ToList() ;
   }
 }
