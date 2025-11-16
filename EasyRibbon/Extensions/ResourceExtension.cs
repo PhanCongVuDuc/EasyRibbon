@@ -16,7 +16,7 @@ public static class ResourceExtension
   public static string? ResolveString( string? key )
   {
     if ( string.IsNullOrEmpty( key ) )
-      return string.Empty ;
+      return null ;
 
     // Automatically search in Application.Current.Resources
     try {

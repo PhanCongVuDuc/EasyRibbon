@@ -13,7 +13,7 @@ public class SonnyTab3
       Image = "/EasyRibbonExample;component/Resources/Icons/RibbonIcon16.png",
       LargeImage = "/EasyRibbonExample;component/Resources/Icons/RibbonIcon32.png",
       LongDescription = "This is Test",
-      ToolTip = "This is toolTip",
+      ToolTipDefault = "This is toolTip",
       ToolTipImage = "/EasyRibbonExample;component/Resources/Icons/RibbonIcon32.png" )]
     public class PulldownButtonData1
     {

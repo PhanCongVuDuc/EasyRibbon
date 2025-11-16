@@ -15,15 +15,17 @@ public class UIAttributeBase( string name ) : Attribute
   /// <summary>
   /// Resolves display name from NameKey or uses Name as fallback
   /// </summary>
-  protected string ResolveName()
+  public string ResolveName()
   {
-    return GetResourceStringOrDefault( NameKey,
-      Name )! ;
+    var resourceStringOrDefault = GetResourceStringOrDefault( NameKey,
+      Name ) ;
+    return resourceStringOrDefault ?? Name ;
   }
 
   protected string? GetResourceStringOrDefault( string? resourceKey,
-    string? toolTipDefault )
+    string? defaultString )
   {
-    return ResourceExtension.ResolveString( resourceKey ) ?? toolTipDefault ;
+    var resourceStringOrDefault = ResourceExtension.ResolveString( resourceKey ) ;
+    return resourceStringOrDefault ?? defaultString ;
   }
 }

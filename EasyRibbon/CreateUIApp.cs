@@ -21,13 +21,14 @@ public class CreateUIApp
     if ( tabAttribute == null )
       return ;
 
-    application.GetOrCreateRibbonTab( tabAttribute.Name ) ;
+    var tabName = tabAttribute.ResolveName() ;
+    application.GetOrCreateRibbonTab( tabName ) ;
 
     var panelTypes = typeof( T ).GetClassTypes() ;
     foreach ( var panelType in panelTypes ) {
       ProcessPanel( application,
         panelType,
-        tabAttribute.Name ) ;
+        tabName ) ;
     }
   }
 

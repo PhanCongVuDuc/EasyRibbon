@@ -1,0 +1,31 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Tab Names -->
+    <system:String x:Key="Tab.SonnyTab4">Sonny Tab</system:String>
+
+    <!-- Panel Names -->
+    <system:String x:Key="Panel.SonnyPannel4">Sonny Pannel 4</system:String>
+
+    <!-- Stacked Button Names -->
+    <system:String x:Key="StackedButton.SonnyStacked4">Sonny Stacked Button 4</system:String>
+
+    <!-- Button Names -->
+    <system:String x:Key="Button.SonnyButton4_1">Sonny Button 4-1</system:String>
+    <system:String x:Key="Button.SonnyButton4_2">Sonny Button 4-2</system:String>
+    <system:String x:Key="Button.SonnyButton4_3">Sonny Button 4-3</system:String>
+    <system:String x:Key="Button.SonnyButton4_4">Sonny Button 4-4</system:String>
+    <system:String x:Key="Button.SonnyButton4_5">Sonny Button 4-5</system:String>
+
+    <!-- Pulldown Button Names -->
+    <system:String x:Key="PulldownButton.SonnyPulldown4">Sonny Pulldown Button Data 4</system:String>
+
+    <!-- ToolTips -->
+    <system:String x:Key="ToolTip.SonnyButton4_1">This is Sonny Button 4-1</system:String>
+    <system:String x:Key="ToolTip.SonnyButton4_2">This is Sonny Button 4-2</system:String>
+    <system:String x:Key="ToolTip.SonnyPulldown4">This is Sonny Pulldown Button Data 4</system:String>
+    <system:String x:Key="ToolTip.SonnyButton4_3">This is Sonny Button 4-3</system:String>
+    <system:String x:Key="ToolTip.SonnyButton4_4">This is Sonny Button 4-4</system:String>
+
+</ResourceDictionary>

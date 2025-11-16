@@ -16,7 +16,7 @@ namespace EasyRibbonMasterExample ;
 /// </summary>
 public class Application : ExternalApplication
 {
-  private readonly ModuleRegistry _moduleRegistry = new ModuleRegistry() ;
+  private readonly ModuleRegistry _moduleRegistry = new() ;
 
   public override void OnStartup()
   {

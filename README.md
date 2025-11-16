@@ -4,13 +4,21 @@ A powerful and elegant attribute-based framework for creating Revit Ribbon UI wi
 
 ![EasyRibbon Demo](Assets/ribbon-demo.png)
 
+Example AlphaBIM Tool
+
+![AlphaBIM Gen Demo](Assets/ribbon-demo-alphabim-gen.png)
+
+![AlphaBIM STR Demo](Assets/ribbon-demo-alphabim-str.png)
+
 ## ✨ Features
 
 - 🎯 **Attribute-Based UI Definition** - Define your ribbon UI using simple C# attributes
+- 🌐 **Resource-Based Localization** - Support for localized strings via ResourceDictionary
 - 🧩 **Modular Architecture** - Organize multiple add-ins into independent, reusable modules
 - 🔄 **Multi-Version Support** - Supports Revit 2021 to 2026
 - 🐛 **Easy Debugging** - Debug individual modules separately or all together
 - 📦 **Flexible Deployment** - Load all modules together or deploy them independently
+- 🎨 **Rich UI Components** - Support for buttons, stacked buttons, pulldown buttons, and nested combinations
 
 ## 🚀 Quick Start
 
@@ -126,11 +134,21 @@ public class MyPanel { }
     ToolTipImage = "path/to/tooltip.png",
     ContextualHelp = "https://help-url.com")]
 public class MyButton;
+
+// With resource-based localization
+[Button("Fallback Name",
+    typeof(CommandClass),
+    NameKey = "Button.MyButton",           // Resolve from ResourceDictionary
+    ToolTipKey = "ToolTip.MyButton",       // Resolve tooltip from ResourceDictionary
+    ToolTipDefault = "Fallback tooltip",   // Fallback if resource not found
+    Image = "path/to/16x16.png",
+    LargeImage = "path/to/32x32.png")]
+public class MyLocalizedButton;
 ```
 
 #### Stacked Button Attribute
 ```csharp
-[StackedButton]
+[StackedButton("Stacked Button Name")]
 public class MyStackedButtons
 {
     [Button("Button 1", typeof(Command1), ...)]
@@ -141,6 +159,27 @@ public class MyStackedButtons
     
     [Button("Button 3", typeof(Command3), ...)]
     public class Button3;
+}
+
+// Stacked buttons can also contain pulldown buttons
+[StackedButton("Stacked with Pulldown")]
+public class MyMixedStackedButtons
+{
+    [Button("Button 1", typeof(Command1), ...)]
+    public class Button1;
+    
+    [Button("Button 2", typeof(Command2), ...)]
+    public class Button2;
+    
+    [PulldownButtonData("Pulldown Name", ...)]
+    public class MyPulldown
+    {
+        [Button("Option 1", typeof(Command3), ...)]
+        public class Option1;
+        
+        [Button("Option 2", typeof(Command4), ...)]
+        public class Option2;
+    }
 }
 ```
 
@@ -157,7 +196,109 @@ public class MyPulldown
     [Button("Option 2", typeof(Command2), ...)]
     public class Option2;
 }
+
+// With resource-based localization
+[PulldownButtonData("Fallback Name",
+    NameKey = "Pulldown.MyPulldown",
+    ToolTipKey = "ToolTip.MyPulldown",
+    ToolTipDefault = "Fallback tooltip",
+    Image = "path/to/16x16.png",
+    LargeImage = "path/to/32x32.png")]
+public class MyLocalizedPulldown
+{
+    [Button("Fallback Option", typeof(Command1), NameKey = "Button.Option1", ...)]
+    public class Option1;
+}
 ```
+
+### Resource-Based Localization
+
+EasyRibbon supports localized strings through WPF ResourceDictionary. This allows you to:
+- Centralize all UI strings in XAML resource files
+- Support multiple languages easily
+- Provide fallback values when resources are not found
+
+#### Setting Up Resources
+
+1. Create a ResourceDictionary file (e.g., `Resources/Strings.xaml`):
+
+```xml
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    
+    <!-- Tab Names -->
+    <system:String x:Key="Tab.MyTab">My Tab</system:String>
+    
+    <!-- Panel Names -->
+    <system:String x:Key="Panel.MyPanel">My Panel</system:String>
+    
+    <!-- Button Names -->
+    <system:String x:Key="Button.MyButton">My Button</system:String>
+    
+    <!-- ToolTips -->
+    <system:String x:Key="ToolTip.MyButton">This is my button</system:String>
+</ResourceDictionary>
+```
+
+2. Load ResourceDictionary in your module:
+
+```csharp
+public void OnStartup(UIControlledApplication application)
+{
+    // Load ResourceDictionary for resource-based names
+    LoadResourceDictionary();
+    
+    // Create ribbon UI
+    CreateUIApp.CreateUI<MyToolsTab>(application);
+}
+
+private static void LoadResourceDictionary()
+{
+    // Ensure Application.Current exists
+    if (System.Windows.Application.Current == null)
+    {
+        new System.Windows.Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
+    }
+
+    if (System.Windows.Application.Current == null)
+        return;
+
+    var resourceDictionary = new ResourceDictionary
+    {
+        Source = new Uri("/MyAddin;component/Resources/Strings.xaml",
+            UriKind.RelativeOrAbsolute)
+    };
+
+    System.Windows.Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+}
+```
+
+3. Use `NameKey` and `ToolTipKey` in your attributes:
+
+```csharp
+[Tab("Fallback Tab Name", NameKey = "Tab.MyTab")]
+public class MyTab
+{
+    [Panel("Fallback Panel Name", NameKey = "Panel.MyPanel")]
+    public class MyPanel
+    {
+        [Button("Fallback Button Name",
+            typeof(MyCommand),
+            NameKey = "Button.MyButton",
+            ToolTipKey = "ToolTip.MyButton",
+            ToolTipDefault = "Fallback tooltip",
+            Image = "/MyAddin;component/Resources/Icons/icon16.png",
+            LargeImage = "/MyAddin;component/Resources/Icons/icon32.png")]
+        public class MyButton;
+    }
+}
+```
+
+**How it works:**
+- If `NameKey` exists in ResourceDictionary → uses the resource value
+- If `NameKey` not found → falls back to `Name` parameter
+- Same logic applies to `ToolTipKey` → `ToolTipDefault` → `ToolTip`
 
 ### Module System
 
@@ -229,6 +370,11 @@ EasyRibbon/
 Check out the included example projects:
 
 1. **EasyRibbonExample** - Single module with multiple tabs and panels
+   - `SonnyTab1.cs` - Basic buttons and stacked buttons
+   - `SonnyTab2.cs` - More stacked button examples
+   - `SonnyTab3.cs` - Pulldown button examples
+   - `SonnyTab4.cs` - **Stacked buttons with pulldown button and resource-based localization**
+   - `Resources/Strings.xaml` - ResourceDictionary example for localization
 2. **EasyRibbonMasterExample** - Master application loading multiple modules
 
 Run the examples to see the framework in action!
