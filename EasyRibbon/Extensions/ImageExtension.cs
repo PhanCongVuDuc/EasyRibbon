@@ -22,7 +22,7 @@ public static class ImageExtension
 
         try
         {
-            var uri = UriExtension.CreateUri(imagePath) ;
+            var uri = UriExtension.CreateUri(imagePath!) ;
 
             // Check if it's a file path and file exists
             if (uri.IsFile
