@@ -18,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for Revit 2021, 2023, and 2024
 - Extension methods for easier API usage
 - Complete example projects
-- Documentation and README
 
 ### Features
 
