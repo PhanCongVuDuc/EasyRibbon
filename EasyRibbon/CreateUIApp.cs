@@ -104,8 +104,8 @@ public class CreateUIApp
     private static (List<object> stackedItems, List<(PulldownButtonData data, List<PushButtonData> buttons)>
         pulldownConfigs) CollectStackedItems(List<Type> buttonTypes)
     {
-        List<object> stackedItems = new() ;
-        List<(PulldownButtonData data, List<PushButtonData> buttons)> pulldownConfigs = new() ;
+        List<object> stackedItems = [] ;
+        List<(PulldownButtonData data, List<PushButtonData> buttons)> pulldownConfigs = [] ;
 
         foreach (var buttonType in buttonTypes)
         {
